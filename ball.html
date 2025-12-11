@@ -35,7 +35,10 @@
   var paddle1 = new Paddle(20, 100);
   var paddle2 = new Paddle(canvas.width - 30, 100);
 
-  var ballY = 10;
+  var ballX = 200;
+  var ballY = 150;
+  var vx = 3;
+  var vy = 2;
 
   document.addEventListener("keydown", function(e) {
     if (e.key === "ArrowUp") paddle1.move(-10);
@@ -53,10 +56,26 @@
   function loop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    ballX += vx;
+    ballY += vy;
+
+    if (ballY < 0 || ballY > canvas.height) vy = -vy;
+
+    if (ballX < paddle1.x + paddle1.width &&
+        ballY > paddle1.y &&
+        ballY < paddle1.y + paddle1.height) {
+      vx = -vx;
+    }
+
+    if (ballX > paddle2.x &&
+        ballY > paddle2.y &&
+        ballY < paddle2.y + paddle2.height) {
+      vx = -vx;
+    }
+
     ctx.beginPath();
-    ctx.arc(50, ballY, 3, 0, 2 * Math.PI);
-    ctx.stroke();
-    ballY += 1;
+    ctx.arc(ballX, ballY, 5, 0, 2 * Math.PI);
+    ctx.fill();
 
     paddle1.draw();
     paddle2.draw();
