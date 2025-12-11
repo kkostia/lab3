@@ -4,7 +4,6 @@
 <head>
   <meta charset="UTF-8">
   <title>Canvas</title>
-
   <style>
     canvas { border: 1px solid black; }
   </style>
@@ -25,50 +24,47 @@
       this.width = 10;
       this.height = 60;
     }
-
     draw() {
-      ctx.fillStyle = "black";
       ctx.fillRect(this.x, this.y, this.width, this.height);
     }
-
     move(dy) {
       this.y += dy;
     }
   }
 
-  var paddle = new Paddle(20, 100);
+  var paddle1 = new Paddle(20, 100);
+  var paddle2 = new Paddle(canvas.width - 30, 100);
 
-  var y = 10;
+  var ballY = 10;
 
   document.addEventListener("keydown", function(e) {
-    if (e.key === "ArrowUp") {
-      paddle.move(-10);
-    }
-    if (e.key === "ArrowDown") {
-      paddle.move(10);
-    }
+    if (e.key === "ArrowUp") paddle1.move(-10);
+    if (e.key === "ArrowDown") paddle1.move(10);
+    if (e.key === "w" || e.key === "W") paddle2.move(-10);
+    if (e.key === "s" || e.key === "S") paddle2.move(10);
   });
 
   canvas.addEventListener("mousemove", function(e) {
     var rect = canvas.getBoundingClientRect();
     var mouseY = e.clientY - rect.top;
-    paddle.y = mouseY - paddle.height / 2;
+    paddle1.y = mouseY - paddle1.height / 2;
   });
 
-  function repeatme() {
+  function loop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     ctx.beginPath();
-    ctx.arc(50, y, 3, 0, 2 * Math.PI);
+    ctx.arc(50, ballY, 3, 0, 2 * Math.PI);
     ctx.stroke();
-    y += 1;
+    ballY += 1;
 
-    paddle.draw();
+    paddle1.draw();
+    paddle2.draw();
 
-    requestAnimationFrame(repeatme);
+    requestAnimationFrame(loop);
   }
 
-  repeatme();
+  loop();
 </script>
 
 </body>
