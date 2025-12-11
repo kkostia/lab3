@@ -5,61 +5,71 @@
   <meta charset="UTF-8">
   <title>Canvas</title>
 
-  <style type="text/css">
-    body {
-      background-color: white;
-    }
-    canvas {
-      border: 1px solid grey;
-    }
+  <style>
+    canvas { border: 1px solid black; }
   </style>
-
 </head>
 
 <body>
 
-  <canvas id="canvas-for-ball" width="400" height="300"></canvas>
+<canvas id="canvas-for-ball" width="400" height="300"></canvas>
 
-  <script type="text/javascript">
-    var canvas = document.getElementById("canvas-for-ball");
-    var ctx = canvas.getContext("2d");
+<script>
+  var canvas = document.getElementById("canvas-for-ball");
+  var ctx = canvas.getContext("2d");
 
-    class Paddle {
-      constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        this.width = 10;
-        this.height = 60;
-      }
-
-      draw() {
-        ctx.fillStyle = "black";
-        ctx.fillRect(this.x, this.y, this.width, this.height);
-      }
-
-      move(dy) {
-        this.y += dy;
-      }
+  class Paddle {
+    constructor(x, y) {
+      this.x = x;
+      this.y = y;
+      this.width = 10;
+      this.height = 60;
     }
 
-    var paddle = new Paddle(20, 100);
-    var y = 10;
-
-    function repeatme() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      ctx.beginPath();
-      ctx.arc(50, y, 3, 0, 2 * Math.PI);
-      ctx.stroke();
-      y += 1;
-      paddle.draw();
-
-      window.requestAnimationFrame(repeatme);
+    draw() {
+      ctx.fillStyle = "black";
+      ctx.fillRect(this.x, this.y, this.width, this.height);
     }
 
-    repeatme();
-  </script>
+    move(dy) {
+      this.y += dy;
+    }
+  }
+
+  var paddle = new Paddle(20, 100);
+
+  var y = 10;
+
+  document.addEventListener("keydown", function(e) {
+    if (e.key === "ArrowUp") {
+      paddle.move(-10);
+    }
+    if (e.key === "ArrowDown") {
+      paddle.move(10);
+    }
+  });
+
+  canvas.addEventListener("mousemove", function(e) {
+    var rect = canvas.getBoundingClientRect();
+    var mouseY = e.clientY - rect.top;
+    paddle.y = mouseY - paddle.height / 2;
+  });
+
+  function repeatme() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    ctx.beginPath();
+    ctx.arc(50, y, 3, 0, 2 * Math.PI);
+    ctx.stroke();
+    y += 1;
+
+    paddle.draw();
+
+    requestAnimationFrame(repeatme);
+  }
+
+  repeatme();
+</script>
 
 </body>
-
 </html>
